@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
-  const Home({Key key}) : super(key: key);
-
   @override
   _HomeState createState() => _HomeState();
 }
@@ -11,33 +9,47 @@ class _HomeState extends State<Home> {
 
   Map data = {};
 
+//  @override
+//  void initState() {
+//    super.initState();
+//  }
+
   @override
   Widget build(BuildContext context) {
 
-    data = ModalRoute.of(context).settings.arguments;
-    print(data);
+    data = data.isNotEmpty ? data : ModalRoute.of(context).settings.arguments;
 
-    //set background
-    String bgImage= data['isDaytime'] ? 'day.jpg': 'night.jpg';
-    Color bgColor = data['isDaytime'] ? Colors.blueGrey[100] : Colors.indigo[700];
+    // set background image
+    String bgImage = data['isDaytime'] ? 'day.jpg' : 'night.jpg';
+    Color bgColor = data['isDaytime'] ? Colors.blueGrey[500] : Colors.indigo[700];
 
     return Scaffold(
       backgroundColor: bgColor,
       body: SafeArea(
         child: Container(
           decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/$bgImage'),
-              fit: BoxFit.cover,
-            )
+              image: DecorationImage(
+                image: AssetImage('assets/$bgImage'),
+                fit: BoxFit.cover,
+              )
           ),
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(0, 120.0, 0, 120.0),
+            padding: const EdgeInsets.fromLTRB(0, 120.0, 0, 0),
             child: Column(
-              children:<Widget> [
+              children: <Widget>[
                 FlatButton.icon(
-                  onPressed: () {
-                    Navigator.pushNamed(context,'/location');
+                  onPressed: () async {
+                    dynamic result = await Navigator.pushNamed(context, '/location');
+                    if(result != null){
+                      setState(() {
+                        data = {
+                          'time': result['time'],
+                          'location': result['location'],
+                          'isDaytime': result['isDaytime'],
+                          'flag': result['flag']
+                        };
+                      });
+                    }
                   },
                   icon: Icon(
                     Icons.edit_location,
@@ -45,33 +57,33 @@ class _HomeState extends State<Home> {
                   ),
                   label: Text(
                     'Edit Location',
-                    style:TextStyle(
+                    style: TextStyle(
                       color: Colors.grey[300],
-                    )
+                    ),
                   ),
                 ),
-                SizedBox(height:20.0),
+                SizedBox(height: 20.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children:<Widget>[
+                  children: <Widget>[
                     Text(
                       data['location'],
                       style: TextStyle(
-                        fontSize: 20.0,
+                        fontSize: 28.0,
                         letterSpacing: 2.0,
                         color: Colors.white,
-                      )
-                    )
+                      ),
+                    ),
                   ],
                 ),
                 SizedBox(height: 20.0),
                 Text(
-                  data['time'],
-                  style: TextStyle(
-                    fontSize: 66.0,
-                    color: Colors.white,
-                  )
-                )
+                    data['time'],
+                    style: TextStyle(
+                        fontSize: 66.0,
+                        color: Colors.white
+                    )
+                ),
               ],
             ),
           ),

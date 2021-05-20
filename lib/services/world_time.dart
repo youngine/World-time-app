@@ -2,7 +2,7 @@ import 'package:http/http.dart';
 import 'dart:convert';
 import 'package:intl/intl.dart';
 
-class WorldTIme{
+class WorldTime{
 
   String location; // location name for the UI
   String time; // the time in that location
@@ -10,7 +10,7 @@ class WorldTIme{
   String url; // location url for api endpoint
   bool isDaytime; //true or false if daytime or not
 
-  WorldTIme({this.location, this.flag, this.url});
+  WorldTime({this.location, this.flag, this.url});
 
   Future <void> getTime() async{
 
